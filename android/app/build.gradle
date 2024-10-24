@@ -1,0 +1,58 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.gms.google-services' // Apply Google services plugin here
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "1"
+def flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
+
+android {
+    namespace = "com.example.my_first_project"
+    compileSdk = flutter.compileSdkVersion
+
+    // Set the correct NDK version to resolve the mismatch issues with plugins
+    ndkVersion = "25.1.8937393"
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        applicationId = "com.example.my_first_project"
+        minSdk = 23
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+// Add Firebase dependencies
+dependencies {
+    implementation platform('com.google.firebase:firebase-bom:32.0.0') // Firebase Bill of Materials (BoM)
+    implementation 'com.google.firebase:firebase-auth'                 // Firebase Authentication
+    implementation 'com.google.firebase:firebase-analytics'            // Add more Firebase dependencies as needed
+    // If you are using Firestore or Storage, add those as well:
+    // implementation 'com.google.firebase:firebase-firestore'
+    // implementation 'com.google.firebase:firebase-storage'
+}
